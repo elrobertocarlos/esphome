@@ -1,7 +1,12 @@
 Acurite Hub 06086M component for ESPHome
 ======================================
 
-The Acurite Hub model 06086M is a display that receives RF data from the 5-in-1 RF sensor and pushes updates to wunderground PWS system. It uses a ESP-WROOM-02 (https://docs.platformio.org/en/latest/boards/espressif8266/esp_wroom_02.html) for the internet connectivity and it receives AT commands from a epoxy blob MCU that processes the RF signal from the station. No local humidity, temperature or any other sensor is available.
+The Acurite Hub model 06086M is a Wi-Fi enabled display that receives RF data from the 5-in-1 RF sensor and pushes updates to wunderground PWS system. It uses a ESP-WROOM-02 (https://docs.platformio.org/en/latest/boards/espressif8266/esp_wroom_02.html) for the internet connectivity and it receives AT commands from a epoxy blob MCU that processes the RF signal from the station. No local humidity, temperature or any other sensor is available.
+
+### Product page
+
+AcuRite Iris (5-in-1) Color Display with Wi-Fi Connection to Weather Underground
+https://www.acurite.com/shop-all/weather-instruments/weather-sensors-and-parts/displays/wi-fi-display-for-5-in-1-sensor.html
 
 Installation
 ------------
