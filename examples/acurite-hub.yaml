@@ -1,0 +1,114 @@
+esphome:
+  name: acurite-hub
+  friendly_name: Acurite Hub
+  name_add_mac_suffix: true
+
+external_components:
+  - source: github://elrobertocarlos/esphome@main
+    components: [ acurite_hub ]
+
+esp8266:
+  board: esp_wroom_02
+  restore_from_flash: true
+
+# Enable logging
+logger:
+  hardware_uart: UART1
+
+# Enable Home Assistant API
+#api:
+#  encryption:
+#    key: ""
+
+#ota:
+#  - platform: esphome
+#    password: ""
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Acurite Hub Fallback Hotspot"
+    password: !secret fallback_hotspot_password
+  domain: ""
+  reboot_timeout: 2min
+
+web_server:
+  port: 80
+  auth:
+    username: !secret web_server_username
+    password: !secret web_server_password
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 115200
+
+http_request:
+  useragent: esphome/device
+  timeout: 10s
+  verify_ssl: false
+
+acurite_hub:
+  id: hub
+  uart_id: uart_bus
+
+sensor:
+  - platform: acurite_hub
+    acurite_hub_id: hub
+    wind_speed:
+      name: Wind Speed
+    wind_direction_degrees:
+      name: Wind Direction
+    wind_gust:
+      name: Wind Gust
+    daily_rain:
+      name: Daily Rain
+    rain:
+      name: Rain
+    humidity:
+      name: Humidity
+    temperature:
+      name: Temperature
+    pressure:
+      name: Pressure
+    rssi:
+      name: Station RSSI
+    dew_point:
+      name: Dew Point
+    average_wind_speed:
+      name: Average Wind Speed
+
+  - platform: wifi_signal
+    name: WiFi Signal dB
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: acurite_hub
+    data:
+      name: Data
+      on_value:
+        then:
+          - http_request.get: 
+              url: !lambda |-
+                return ((std::string) id(url_template).state + x).c_str();
+    sensor_battery:
+      name: Sensor Battery
+    battery:
+      name: Hub Battery
+
+text:
+  - platform: template
+    name: URL Template
+    id: url_template
+    mode: text
+    max_length: 95
+    entity_category: config
+    optimistic: true
+    initial_value: "http://192.168.3.155:7622/weatherstation/updateweatherstation.php?dateutc=now"
+    restore_value: true
